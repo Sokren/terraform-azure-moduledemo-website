@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "=2.76.0"
+      version = "=3.8.0"
     }
   }
 }
@@ -154,10 +154,6 @@ resource "null_resource" "configure-azure-web-app" {
     azurerm_virtual_machine.azure-web-vm,
   ]
 
-#  triggers = {
-#    build_number = timestamp()
-#  }
-
   provisioner "file" {
     source      = "website/"
     destination = "/home/${var.linux_admin_user}"
@@ -174,9 +170,6 @@ resource "null_resource" "configure-azure-web-app" {
     inline = [
       "echo ${var.linux_admin_password} | sudo -S yum -y install httpd",
       "sudo mv /home/${var.linux_admin_user}/* /var/www/html/",
-#      "sudo echo 'Welcome to website on the region ${var.rg_location}' > /tmp/index.html",
-#      "sudo rm /var/www/html/index.html",
-#      "sudo mv /tmp/index.html /var/www/html/index.html",
       "sudo echo 'Deploy on the region ${var.rg_location}' >> /var/www/html/index.html",
       "sudo restorecon -R -v /var/www/html/",
       "sudo systemctl start httpd",
